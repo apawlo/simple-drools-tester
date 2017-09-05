@@ -10,24 +10,6 @@ class DroolsExecutorTest extends Specification {
 
     def executor = new DroolsExecutor()
 
-    def "Should process multi-table ruleset"() {
-        given:
-        def context = [
-                tableNames: ["IN_MIN_AGE_SUBS", "MIN_PREMIUM"],
-                unitRole  : null,
-                result    : null
-        ]
-
-        when:
-        executor.run("/rules/DROOLS_EXAMPLE.xls", context)
-
-        then:
-        with(context) {
-            result == 4
-            MIN_PREMIUM == 40
-        }
-    }
-
     @Unroll
     def "Should process multi-table ruleset with unitRole = #unitRole"() {
         given:
