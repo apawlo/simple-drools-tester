@@ -1,6 +1,7 @@
 package com.github.apawlo.drools
 
 import spock.lang.Specification
+import spock.lang.Unroll
 
 /**
  * Example tests
@@ -27,11 +28,12 @@ class DroolsExecutorTest extends Specification {
         }
     }
 
-    def "Should process multi-table ruleset with unitRole"() {
+    @Unroll
+    def "Should process multi-table ruleset with unitRole = #unitRole"() {
         given:
         def context = [
                 tableNames: ["IN_MIN_AGE_SUBS", "MIN_PREMIUM"],
-                unitRole  : "DIS",
+                unitRole  : unitRole,
                 result    : null
         ]
 
@@ -40,8 +42,16 @@ class DroolsExecutorTest extends Specification {
 
         then:
         with(context) {
-            result == 1
-            MIN_PREMIUM == 10
+            result == expectedResult
+            MIN_PREMIUM == expectedMinPremium
         }
+
+        where:
+        unitRole || expectedResult | expectedMinPremium
+        "DIS"    || 1.0            | 10.0
+        "BO"     || 2.0            | 20.0
+        "SU"     || 3              | 30
+        "BOUND"  || 4              | 40
+        null     || 4              | 40
     }
 }
